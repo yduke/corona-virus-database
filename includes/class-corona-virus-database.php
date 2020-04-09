@@ -216,3 +216,65 @@ class Corona_Virus_Database {
 	}
 
 }
+
+function save_cov2019() {
+		$request = wp_remote_get( 'https://corona.lmao.ninja/all' );
+		if( is_wp_error( $request ) ) {
+			return false; 
+		}
+		$body = wp_remote_retrieve_body( $request );
+		$cov2019_data = json_decode( $body );
+		if( ! empty( $cov2019_data ) ) {
+update_option('cov2019', $cov2019_data);
+		}
+}
+
+function save_cov2019_all() {
+		$request = wp_remote_get( 'https://corona.lmao.ninja/countries' );
+		if( is_wp_error( $request ) ) {
+			return false; 
+		}
+		$body = wp_remote_retrieve_body( $request );
+		$cov2019all_data = json_decode( $body );
+		if( ! empty( $cov2019all_data ) ) {
+update_option('cov2019all', $cov2019all_data);
+		}
+}
+
+function cov_gmt_to_local( $gmt_timestamp ) {
+	$local_timestamp = get_date_from_gmt( date( 'Y-m-d H:i:s',$gmt_timestamp /1000 ), get_option('date_format').  get_option('time_format') );
+	return $local_timestamp;
+}
+
+
+add_action('wp', 'coronavirus_schedule');
+function coronavirus_schedule() {
+	if( !wp_next_scheduled( 'coronavirus_check' ) ) {
+	wp_schedule_event( time(), 'hourly', 'coronavirus_check' );
+	}
+}
+
+add_action( 'coronavirus_check', 'coronavirus_check_data' );
+function coronavirus_check_data(){
+	save_cov2019();
+	save_cov2019_all();
+}
+
+
+//shorcode
+function cvdb_func($atts, $content = null, $shortcodename = "")
+{
+	$cov2019 = get_option('cov2019');
+	$return = '<div id="ncov2019"><span>' . __('Last update on: ', 'corona-virus-data') . '</span><span id="cov-time">'.sprintf( cov_gmt_to_local($cov2019 -> updated) ).'</span>
+	<div class="title text-center">' . __('Global Total', 'corona-virus-data') . '</div>
+	<div class="one_fourth text-center"><h5>' . __('Cases', 'corona-virus-data') . '</h5><h3 class="has-text-color has-luminous-vivid-orange-color">'.sprintf( $cov2019 -> cases ).'</h3></div>
+	<div class="one_fourth text-center"><h5>' . __('Deaths', 'corona-virus-data') . '</h5><h3>'.sprintf( $cov2019 -> cases ).'</h3></div>
+	<div class="one_fourth text-center"><h5>' . __('Recovered', 'corona-virus-data') . '</h5><h3 class="has-text-color has-vivid-green-cyan-color">'.sprintf($cov2019 -> cases ).'</h3></div>
+	<div class="one_fourth text-center"><h5>' . __('Active', 'corona-virus-data') . '</h5><h3 class="has-text-color has-luminous-vivid-orange-color">'.sprintf($cov2019 -> cases ).'</h3></div>';
+	$return .= '</div>';
+	if(get_option('show_oc')){
+		
+	}
+	return $return;
+}
+add_shortcode("cvdb", "cvdb_func");

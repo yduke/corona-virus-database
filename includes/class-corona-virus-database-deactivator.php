@@ -30,7 +30,9 @@ class Corona_Virus_Database_Deactivator {
 	 * @since    1.0.0
 	 */
 	public static function deactivate() {
-
+		if( wp_next_scheduled( 'coronavirus_check' ) ){
+			wp_clear_scheduled_hook('coronavirus_check');
+		}
 	}
 
 }
