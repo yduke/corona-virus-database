@@ -80,3 +80,12 @@ function run_corona_virus_database() {
 
 }
 run_corona_virus_database();
+
+//setting link
+add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'cvd_plugin_action_links');
+ 
+function cvd_plugin_action_links($links)
+{
+        $links[] = '<a href="' . get_admin_url(null, 'options-general.php?page=a') . '">' . __('Settings','corona-virus-database') . '</a>';
+        return $links;
+}
