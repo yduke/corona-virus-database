@@ -218,7 +218,7 @@ class Corona_Virus_Database {
 }
 
 function save_cov2019() {
-		$request = wp_remote_get( 'https://corona.lmao.ninja/all' );
+		$request = wp_remote_get( 'https://corona.lmao.ninja/v2/all' );
 		if( is_wp_error( $request ) ) {
 			return false; 
 		}
@@ -230,7 +230,7 @@ update_option('cov2019', $cov2019_data);
 }
 
 function save_cov2019_all() {
-		$request = wp_remote_get( 'https://corona.lmao.ninja/countries' );
+		$request = wp_remote_get( 'https://corona.lmao.ninja/v2/countries' );
 		if( is_wp_error( $request ) ) {
 			return false; 
 		}
@@ -270,7 +270,11 @@ function cvdb_func($atts, $content = null, $shortcodename = "")
 	<div class="one_fourth text-center"><h5>' . __('Cases', 'corona-virus-data') . '</h5><h3 class="has-text-color has-luminous-vivid-orange-color">'.sprintf( $cov2019 -> cases ).'</h3></div>
 	<div class="one_fourth text-center"><h5>' . __('Deaths', 'corona-virus-data') . '</h5><h3>'.sprintf( $cov2019 -> cases ).'</h3></div>
 	<div class="one_fourth text-center"><h5>' . __('Recovered', 'corona-virus-data') . '</h5><h3 class="has-text-color has-vivid-green-cyan-color">'.sprintf($cov2019 -> cases ).'</h3></div>
-	<div class="one_fourth text-center"><h5>' . __('Active', 'corona-virus-data') . '</h5><h3 class="has-text-color has-luminous-vivid-orange-color">'.sprintf($cov2019 -> cases ).'</h3></div>';
+	<div class="one_fourth text-center"><h5>' . __('Active', 'corona-virus-data') . '</h5><h3 class="has-text-color has-luminous-vivid-orange-color">'.sprintf($cov2019 -> cases ).'</h3></div>
+	<div class="one_fourth text-center"><h5>' . __('Cases Today', 'corona-virus-data') . '</h5><h3 class="has-text-color has-luminous-vivid-orange-color">'.sprintf($cov2019 -> todayCases ).'</h3></div>
+	<div class="one_fourth text-center"><h5>' . __('Deaths Today', 'corona-virus-data') . '</h5><h3>'.sprintf($cov2019 -> cases ).'</h3></div>
+	<div class="one_fourth text-center"><h5>' . __('Critical', 'corona-virus-data') . '</h5><h3 class="has-text-color has-vivid-red-color">'.sprintf($cov2019 -> todayDeaths ).'</h3></div>
+	<div class="one_fourth text-center"><h5><small>' . __('Cases Per Million', 'corona-virus-data') . '</small></h5><h3 class="has-text-color has-vivid-cyan-blue-color">'.sprintf($cov2019 -> casesPerOneMillion ).'</h3></div>';
 	$return .= '</div>';
 	if(get_option('show_oc')){
 		
